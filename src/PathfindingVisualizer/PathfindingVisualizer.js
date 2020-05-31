@@ -1,15 +1,38 @@
-import React, {Component} from 'react'
+import React, { PureComponent } from 'react'
 import Node from './Node/Node'
 
-class PathfindingVisualizer extends Component {
+class PathfindingVisualizer extends PureComponent {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      nodes: []
+    }
+  }
+
+  componentDidMount() {
+    const nodes = [];
+    for (let row = 0; row < 15; row++) {
+      const currentRow = [];
+      for (let col = 0; col < 40; col++) {
+        currentRow.push([])
+      }
+      nodes.push(currentRow)
+    }
+    this.setState({ nodes })
   }
 
   render() {
+    const { nodes } = this.state
     return (
-      <Node></Node>
+      <div>
+      {
+        nodes.map((row, rowIndex) => {
+          return <div>
+            {row.map((node, nodeIndex) => <Node></Node>)}
+          </div>
+        })
+      }
+      </div>
     )
   }
 }
