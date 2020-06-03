@@ -3,4 +3,10 @@
   height: 20px;
   outline: 1px solid gray;
   display: inline-block;
+  &.node-start {
+    background-color: green;
+  }
+  &.node-finish {
+    background-color: red;
+  }
 }
