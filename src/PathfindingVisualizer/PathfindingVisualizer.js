@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react'
 import Node from './Node/Node'
+import Dijkstra from '/algorithms/dijkstra'
 import './PathfindingVisualizer.scss'
 
-const START_ROW = 7
-const START_COLUMN = 10
-const END_ROW = 10
-const END_COLUMN = 35
+const START_ROW = 0
+const START_COLUMN = 23
+const END_ROW = 7
+const END_COLUMN = 9
 
 class PathfindingVisualizer extends PureComponent {
 	constructor(props) {
@@ -19,7 +20,7 @@ class PathfindingVisualizer extends PureComponent {
 		const nodes = []
 		for (let row = 0; row < 15; row++) {
 			const currentRow = []
-			for (let col = 0; col < 40; col++) {
+			for (let col = 0; col < 50; col++) {
 				const currnetNode = this.createNode(row, col)
 				currentRow.push(currnetNode)
 			}
@@ -40,95 +41,14 @@ class PathfindingVisualizer extends PureComponent {
 
 	visualizeDijkstra = async () => {
 		const { nodes } = this.state
+		const startNode = [START_ROW, START_COLUMN]
+		const endNode = [END_ROW, END_COLUMN]
+		const shorestPath = Dijkstra(nodes, startNode, endNode)
 		const newNodes = nodes.map(node => node)
-		let row = START_ROW
-		let col = START_COLUMN
-		let move_row = row
-		let move_col = col
-		for (let i = 0; i < 40; i++) {
-			row = move_row
-			for (let j = 0; j < i * 2 + 1; j++) {
-				col = move_col
-				for (let k = 0; k < 3; k++) {
-					const updateNode = newNodes.map(node => node)
-					if (k === 1) {
-						if (j <= parseInt((i * 2 + 1) / 2)) {
-							col -= j
-						} else {
-							col -= i * 2 - j
-						}
-					} else if (k === 2) {
-						if (j <= parseInt((i * 2 + 1) / 2)) {
-							col += j * 2
-						} else {
-							col += (i * 2 - j) * 2
-						}
-					}
-					if (
-						(row - 1 === END_ROW && col === END_COLUMN) ||
-						(row === END_ROW && col - 1 === END_COLUMN) ||
-						(row === END_ROW && col + 1 === END_COLUMN) ||
-						(row + 1 === END_ROW && col === END_COLUMN)
-					) {
-						return
-					}
-					if (
-						newNodes[row - 1] &&
-						newNodes[row - 1][col] &&
-						newNodes[row - 1][col].isVisited === false
-					) {
-						newNodes[row - 1][col].isVisited = true
-						await new Promise((res, rej) => {
-							setTimeout(() => {
-								this.setState({ nodes: updateNode })
-								res()
-							}, 0)
-						})
-					}
-					if (
-						newNodes[row] &&
-						newNodes[row][col - 1] &&
-						newNodes[row][col - 1].isVisited === false
-					) {
-						newNodes[row][col - 1].isVisited = true
-						await new Promise((res, rej) => {
-							setTimeout(() => {
-								this.setState({ nodes: updateNode })
-								res()
-							}, 0)
-						})
-					}
-					if (
-						newNodes[row] &&
-						newNodes[row][col + 1] &&
-						newNodes[row][col + 1].isVisited === false
-					) {
-						newNodes[row][col + 1].isVisited = true
-						await new Promise((res, rej) => {
-							setTimeout(() => {
-								this.setState({ nodes: updateNode })
-								res()
-							}, 0)
-						})
-					}
-					if (
-						newNodes[row + 1] &&
-						newNodes[row + 1][col] &&
-						newNodes[row + 1][col].isVisited === false
-					) {
-						newNodes[row + 1][col].isVisited = true
-						await new Promise((res, rej) => {
-							setTimeout(() => {
-								this.setState({ nodes: updateNode })
-								res()
-							}, 0)
-						})
-					}
-				}
-				row++
-			}
-			move_row--
+		for (let i = shorestPath.length - 2; i >= 0; i--) {
+			newNodes[shorestPath[i].row][shorestPath[i].col].isVisited = true
 		}
+		this.setState({ nodes: newNodes })
 	}
 
 	render() {
