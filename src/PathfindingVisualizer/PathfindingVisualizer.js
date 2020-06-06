@@ -1,26 +1,27 @@
 import React, { PureComponent } from 'react'
 import Node from './Node/Node'
-import Dijkstra, { findPathGraph, travelGraph } from '/algorithms/dijkstra'
+import { findPathGraph, travelGraph } from '/algorithms/dijkstra'
 import './PathfindingVisualizer.scss'
 
-const START_ROW = 2
+const START_ROW = 5
 const START_COLUMN = 2
 const END_ROW = 8
-const END_COLUMN = 8
+const END_COLUMN = 45
 
 class PathfindingVisualizer extends PureComponent {
 	constructor(props) {
 		super(props)
 		this.state = {
 			nodes: [],
+			isCreateBlock: false,
 		}
 	}
 
 	componentDidMount() {
 		const nodes = []
-		for (let row = 0; row < 10; row++) {
+		for (let row = 0; row < 15; row++) {
 			const currentRow = []
-			for (let col = 0; col < 10; col++) {
+			for (let col = 0; col < 50; col++) {
 				const currnetNode = this.createNode(row, col)
 				currentRow.push(currnetNode)
 			}
@@ -64,6 +65,28 @@ class PathfindingVisualizer extends PureComponent {
 		// this.setState({ nodes: newNodes })
 	}
 
+	mouseOverBlock = (rowIndex, nodeIndex) => {
+		const { nodes, isCreateBlock } = this.state
+		if (isCreateBlock) {
+			document.getElementById(
+				`node-${rowIndex}-${nodeIndex}`,
+			).style.backgroundColor = 'orange'
+			nodes[rowIndex][nodeIndex].row = -1
+			nodes[rowIndex][nodeIndex].col = -1
+			this.setState({ nodes })
+		}
+	}
+
+	clickBlock = (rowIndex, nodeIndex) => {
+		const { nodes, isCreateBlock } = this.state
+		document.getElementById(
+			`node-${rowIndex}-${nodeIndex}`,
+		).style.backgroundColor = 'orange'
+		nodes[rowIndex][nodeIndex].row = -1
+		nodes[rowIndex][nodeIndex].col = -1
+		this.setState({ nodes, isCreateBlock: !isCreateBlock })
+	}
+
 	render() {
 		const { nodes } = this.state
 		return (
@@ -84,7 +107,13 @@ class PathfindingVisualizer extends PureComponent {
 											id={`node-${rowIndex}-${nodeIndex}`}
 											isStart={isStart}
 											isFinish={isFinish}
-											isVisited={isVisited}></Node>
+											isVisited={isVisited}
+											clicked={() => {
+												this.clickBlock(rowIndex, nodeIndex)
+											}}
+											mouseOver={() => {
+												this.mouseOverBlock(rowIndex, nodeIndex)
+											}}></Node>
 									)
 								})}
 							</div>
