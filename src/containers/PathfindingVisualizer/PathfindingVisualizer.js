@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react'
-import { Node } from '/components'
+import { Node, Fragment } from '/components'
 import { findPathGraph, travelGraph } from '/algorithms/dijkstra'
 import './PathfindingVisualizer.scss'
 
 const START_ROW = 5
 const START_COLUMN = 2
 const END_ROW = 8
-const END_COLUMN = 4
+const END_COLUMN = 45
 
 class PathfindingVisualizer extends PureComponent {
 	constructor(props) {
@@ -19,9 +19,9 @@ class PathfindingVisualizer extends PureComponent {
 
 	componentDidMount() {
 		const nodes = []
-		for (let row = 0; row < 10; row++) {
+		for (let row = 0; row < 15; row++) {
 			const currentRow = []
-			for (let col = 0; col < 10; col++) {
+			for (let col = 0; col < 50; col++) {
 				const currnetNode = this.createNode(row, col)
 				currentRow.push(currnetNode)
 			}
@@ -59,7 +59,7 @@ class PathfindingVisualizer extends PureComponent {
 				document.getElementById(
 					`node-${travel[i][0]}-${travel[i][1]}`,
 				).style.backgroundColor = 'pink'
-			}, start + 20 * (travel.length - 1 - i))
+			}, start + 100 * (travel.length - 1 - i))
 		}
 	}
 
@@ -67,8 +67,8 @@ class PathfindingVisualizer extends PureComponent {
 		document.getElementById(
 			`node-${rowIndex}-${nodeIndex}`,
 		).style.backgroundColor = 'orange'
-		nodes[rowIndex][nodeIndex].row = -nodes[rowIndex][nodeIndex].row
-		nodes[rowIndex][nodeIndex].col = -nodes[rowIndex][nodeIndex].col
+		nodes[rowIndex][nodeIndex].row = -Math.abs(nodes[rowIndex][nodeIndex].row)
+		nodes[rowIndex][nodeIndex].col = -Math.abs(nodes[rowIndex][nodeIndex].col)
 	}
 
 	mouseOverBlock = (rowIndex, nodeIndex) => {
@@ -88,7 +88,7 @@ class PathfindingVisualizer extends PureComponent {
 	render() {
 		const { nodes } = this.state
 		return (
-			<div>
+			<Fragment>
 				<button
 					className='button-visualize'
 					onClick={() => this.visualizeDijkstra()}>
@@ -118,7 +118,7 @@ class PathfindingVisualizer extends PureComponent {
 						)
 					})}
 				</div>
-			</div>
+			</Fragment>
 		)
 	}
 }
