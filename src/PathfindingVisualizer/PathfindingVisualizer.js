@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react'
 import Node from './Node/Node'
-import Dijkstra from '/algorithms/dijkstra'
+import Dijkstra, { findPathGraph, travelGraph } from '/algorithms/dijkstra'
 import './PathfindingVisualizer.scss'
 
-const START_ROW = 6
+const START_ROW = 2
 const START_COLUMN = 2
-const END_ROW = 13
-const END_COLUMN = 25
+const END_ROW = 8
+const END_COLUMN = 8
 
 class PathfindingVisualizer extends PureComponent {
 	constructor(props) {
@@ -18,9 +18,9 @@ class PathfindingVisualizer extends PureComponent {
 
 	componentDidMount() {
 		const nodes = []
-		for (let row = 0; row < 15; row++) {
+		for (let row = 0; row < 10; row++) {
 			const currentRow = []
-			for (let col = 0; col < 50; col++) {
+			for (let col = 0; col < 10; col++) {
 				const currnetNode = this.createNode(row, col)
 				currentRow.push(currnetNode)
 			}
@@ -43,26 +43,23 @@ class PathfindingVisualizer extends PureComponent {
 		const { nodes } = this.state
 		const startNode = [START_ROW, START_COLUMN]
 		const endNode = [END_ROW, END_COLUMN]
-		const shorestPath = Dijkstra(nodes, startNode, endNode)
-		const newNodes = nodes.map(node => node)
-		for (let i = 0; i < shorestPath[0].length; i++) {
-			// newNodes[shorestPath[i].row][shorestPath[i].col].isVisited = true
+		const findPath = findPathGraph(nodes, startNode, endNode)
+		const travel = travelGraph(nodes, startNode, endNode)
+		for (let i = 0; i < findPath.length; i++) {
 			setTimeout(() => {
 				document
-					.getElementById(
-						`node-${shorestPath[0][i].row}-${shorestPath[0][i].col}`,
-					)
+					.getElementById(`node-${findPath[i][0]}-${findPath[i][1]}`)
 					.classList.add('node-visited')
 			}, 20 * i)
 		}
-		let start = shorestPath[0].length * 20
-		for (let i = shorestPath[1].length - 2; i >= 0; i--) {
+		let start = findPath.length * 20
+		for (let i = travel.length - 2; i >= 0; i--) {
 			// newNodes[shorestPath[i].row][shorestPath[i].col].isVisited = true
 			setTimeout(() => {
 				document.getElementById(
-					`node-${shorestPath[1][i].row}-${shorestPath[1][i].col}`,
+					`node-${travel[i][0]}-${travel[i][1]}`,
 				).style.backgroundColor = 'pink'
-			}, start + 20 * (shorestPath[1].length - 1 - i))
+			}, start + 20 * (travel.length - 1 - i))
 		}
 		// this.setState({ nodes: newNodes })
 	}
