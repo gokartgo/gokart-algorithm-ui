@@ -8,7 +8,7 @@ class Node extends Component {
 	}
 
 	render() {
-		const { isStart, isFinish, isVisited } = this.props
+		const { isStart, isFinish, isVisited, id } = this.props
 		let className = 'node'
 		if (isStart) {
 			className += ' node-start'
@@ -19,7 +19,7 @@ class Node extends Component {
 		if (isVisited && !isStart && !isFinish) {
 			className += ' node-visited'
 		}
-		return <div className={className}></div>
+		return <div id={id} className={className}></div>
 	}
 }
 

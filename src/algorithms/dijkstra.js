@@ -41,13 +41,11 @@ const createGraph = graph => {
 }
 
 const indexToRowColumn = (path, colLength) => {
-	for (let i = 0; i < path.length; i++) {
-		path[i] = {
-			row: parseInt(path[i] / colLength),
-			col: path[i] - parseInt(path[i] / colLength) * colLength,
-		}
+	const newPath = {
+		row: parseInt(path / colLength),
+		col: path - parseInt(path / colLength) * colLength,
 	}
-	return path
+	return newPath
 }
 
 let select = [],
@@ -58,7 +56,10 @@ let select = [],
 	u = [],
 	v = [],
 	V = graph.length,
-	show_index = 0
+	show_index = 0,
+	show = [],
+	path = [],
+	find_path = []
 
 const dijkstra = (graph, startNode, endNode) => {
 	const newGraph = createGraph(graph)
@@ -103,78 +104,36 @@ const dijkstra = (graph, startNode, endNode) => {
 			}
 		}
 
+		find_path[i] = indexToRowColumn(choose, colLength)
+		if (
+			(find_path[i].col + 1 === endNode[1] &&
+				find_path[i].row === endNode[0]) ||
+			(find_path[i].col - 1 === endNode[1] &&
+				find_path[i].row === endNode[0]) ||
+			(find_path[i].col === endNode[1] &&
+				find_path[i].row === endNode[0] + 1) ||
+			(find_path[i].col === endNode[1] && find_path[i].row === endNode[0] - 1)
+		) {
+			path[endNode[0] * graph[0].length + endNode[1]] = choose
+			break
+		}
+
 		// if (choose === endNode[0] * graph[0].length + endNode[1]) {
 		// 	break
 		// }
 	}
 
-	let from = path[endNode[0] * graph[0].length + endNode[1]],
-		show = []
-	show[0] = from
-	for (let j = 1; j < sumLength; j++) {
+	let from = endNode[0] * graph[0].length + endNode[1]
+	for (let j = 0; j < sumLength; j++) {
+		show[j] = indexToRowColumn(path[from], colLength)
+		from = path[from]
 		if (from === start) {
 			break
 		}
-		show[j] = path[from]
-		from = path[from]
 	}
+	console.log('show', find_path)
 
-	return indexToRowColumn(show, colLength)
+	return [find_path, show]
 }
-
-const path = new Array()
-
-for (let i = 0; i < V; i++) {
-	select[i] = 0
-	path[i] = choose
-	for (let j = 0; j < V; j++) {
-		if (i !== j && graph[i][j] === 0) {
-			graph[i][j] = Infinity
-		}
-	}
-}
-
-select[choose] = 1
-u[choose] = 0
-
-for (let i = 0; i < V; i++) {
-	v[i] = graph[choose][i]
-}
-
-for (let i = 0; i < V; i++) {
-	select[choose] = 1
-	min = Infinity
-	for (let j = 0; j < V; j++) {
-		if (u[choose] + graph[choose][j] < v[j] && choose != j) {
-			v[j] = u[choose] + graph[choose][j]
-			path[j] = choose
-		}
-	}
-
-	for (let j = 0; j < V; j++) {
-		if (v[j] < min && choose !== j && select[j] === 0) {
-			min = v[j]
-			choose = j
-			u[j] = min
-		}
-	}
-	console.log(v)
-}
-console.log('------------------')
-console.log(path)
-let show = []
-for (let i = 0; i < V; i++) {
-	show[i] = []
-	show[i][0] = path[i]
-	let from = path[i]
-	for (let j = 1; j < V; j++) {
-		if (from === start) {
-			break
-		}
-		show[i][j] = path[from]
-		from = path[from]
-	}
-}
-console.log(show)
 
 export default dijkstra

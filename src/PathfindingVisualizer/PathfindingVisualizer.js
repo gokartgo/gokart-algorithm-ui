@@ -3,10 +3,10 @@ import Node from './Node/Node'
 import Dijkstra from '/algorithms/dijkstra'
 import './PathfindingVisualizer.scss'
 
-const START_ROW = 0
-const START_COLUMN = 23
-const END_ROW = 7
-const END_COLUMN = 9
+const START_ROW = 6
+const START_COLUMN = 2
+const END_ROW = 13
+const END_COLUMN = 25
 
 class PathfindingVisualizer extends PureComponent {
 	constructor(props) {
@@ -45,10 +45,26 @@ class PathfindingVisualizer extends PureComponent {
 		const endNode = [END_ROW, END_COLUMN]
 		const shorestPath = Dijkstra(nodes, startNode, endNode)
 		const newNodes = nodes.map(node => node)
-		for (let i = shorestPath.length - 2; i >= 0; i--) {
-			newNodes[shorestPath[i].row][shorestPath[i].col].isVisited = true
+		for (let i = 0; i < shorestPath[0].length; i++) {
+			// newNodes[shorestPath[i].row][shorestPath[i].col].isVisited = true
+			setTimeout(() => {
+				document
+					.getElementById(
+						`node-${shorestPath[0][i].row}-${shorestPath[0][i].col}`,
+					)
+					.classList.add('node-visited')
+			}, 20 * i)
 		}
-		this.setState({ nodes: newNodes })
+		let start = shorestPath[0].length * 20
+		for (let i = shorestPath[1].length - 2; i >= 0; i--) {
+			// newNodes[shorestPath[i].row][shorestPath[i].col].isVisited = true
+			setTimeout(() => {
+				document.getElementById(
+					`node-${shorestPath[1][i].row}-${shorestPath[1][i].col}`,
+				).style.backgroundColor = 'pink'
+			}, start + 20 * (shorestPath[1].length - 1 - i))
+		}
+		// this.setState({ nodes: newNodes })
 	}
 
 	render() {
@@ -63,12 +79,12 @@ class PathfindingVisualizer extends PureComponent {
 				<div>
 					{nodes.map((row, rowIndex) => {
 						return (
-							<div key={`row-${rowIndex}`}>
+							<div id={`row-${rowIndex}`}>
 								{row.map((node, nodeIndex) => {
 									const { isStart, isFinish, isVisited } = node
 									return (
 										<Node
-											key={`node-${rowIndex}-${nodeIndex}`}
+											id={`node-${rowIndex}-${nodeIndex}`}
 											isStart={isStart}
 											isFinish={isFinish}
 											isVisited={isVisited}></Node>
