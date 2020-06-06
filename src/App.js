@@ -1,11 +1,23 @@
 import React from 'react'
-import PathfindingVisualizer from '/PathfindingVisualizer/PathfindingVisualizer'
+import { Switch, Route } from 'react-router-dom'
+import PathfindingVisualizer from '/containers/PathfindingVisualizer/PathfindingVisualizer'
+import SortVisualizer from '/containers/SortVisualizer/SortVisualizer'
 import '/App.css'
 
 function App() {
 	return (
 		<div className='App'>
-			<PathfindingVisualizer />
+			<Switch>
+				<Route path='/shorest-path'>
+					<PathfindingVisualizer />
+				</Route>
+				<Route path='/sort'>
+					<SortVisualizer />
+				</Route>
+				<Route path='/'>
+					<PathfindingVisualizer />
+				</Route>
+			</Switch>
 		</div>
 	)
 }

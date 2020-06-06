@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import Node from './Node/Node'
+import { Node } from '/components'
 import { findPathGraph, travelGraph } from '/algorithms/dijkstra'
 import './PathfindingVisualizer.scss'
 
@@ -55,14 +55,12 @@ class PathfindingVisualizer extends PureComponent {
 		}
 		let start = findPath.length * 20
 		for (let i = travel.length - 2; i >= 0; i--) {
-			// newNodes[shorestPath[i].row][shorestPath[i].col].isVisited = true
 			setTimeout(() => {
 				document.getElementById(
 					`node-${travel[i][0]}-${travel[i][1]}`,
 				).style.backgroundColor = 'pink'
 			}, start + 20 * (travel.length - 1 - i))
 		}
-		// this.setState({ nodes: newNodes })
 	}
 
 	setWall = (nodes, rowIndex, nodeIndex) => {
