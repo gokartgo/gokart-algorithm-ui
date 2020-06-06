@@ -6,7 +6,7 @@ import './PathfindingVisualizer.scss'
 const START_ROW = 5
 const START_COLUMN = 2
 const END_ROW = 8
-const END_COLUMN = 45
+const END_COLUMN = 4
 
 class PathfindingVisualizer extends PureComponent {
 	constructor(props) {
@@ -19,9 +19,9 @@ class PathfindingVisualizer extends PureComponent {
 
 	componentDidMount() {
 		const nodes = []
-		for (let row = 0; row < 15; row++) {
+		for (let row = 0; row < 10; row++) {
 			const currentRow = []
-			for (let col = 0; col < 50; col++) {
+			for (let col = 0; col < 10; col++) {
 				const currnetNode = this.createNode(row, col)
 				currentRow.push(currnetNode)
 			}
@@ -65,25 +65,25 @@ class PathfindingVisualizer extends PureComponent {
 		// this.setState({ nodes: newNodes })
 	}
 
+	setWall = (nodes, rowIndex, nodeIndex) => {
+		document.getElementById(
+			`node-${rowIndex}-${nodeIndex}`,
+		).style.backgroundColor = 'orange'
+		nodes[rowIndex][nodeIndex].row = -nodes[rowIndex][nodeIndex].row
+		nodes[rowIndex][nodeIndex].col = -nodes[rowIndex][nodeIndex].col
+	}
+
 	mouseOverBlock = (rowIndex, nodeIndex) => {
 		const { nodes, isCreateBlock } = this.state
 		if (isCreateBlock) {
-			document.getElementById(
-				`node-${rowIndex}-${nodeIndex}`,
-			).style.backgroundColor = 'orange'
-			nodes[rowIndex][nodeIndex].row = -1
-			nodes[rowIndex][nodeIndex].col = -1
+			this.setWall(nodes, rowIndex, nodeIndex)
 			this.setState({ nodes })
 		}
 	}
 
 	clickBlock = (rowIndex, nodeIndex) => {
 		const { nodes, isCreateBlock } = this.state
-		document.getElementById(
-			`node-${rowIndex}-${nodeIndex}`,
-		).style.backgroundColor = 'orange'
-		nodes[rowIndex][nodeIndex].row = -1
-		nodes[rowIndex][nodeIndex].col = -1
+		this.setWall(nodes, rowIndex, nodeIndex)
 		this.setState({ nodes, isCreateBlock: !isCreateBlock })
 	}
 

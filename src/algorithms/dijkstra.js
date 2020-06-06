@@ -33,16 +33,16 @@ let find_path = null,
 
 const dijkstra = (graph, startNode, endNode) => {
 	const newGraph = createGraph(graph)
+	console.log(newGraph)
 	let select = [],
 		min = Infinity,
 		choose = startNode,
-		start = choose,
-		u = [],
-		v = [],
+		u = [], // min value
+		v = [], // all path of one point is we choose
 		rowLength = graph.length,
 		colLength = graph[0].length,
 		isBreak = false,
-		path = [],
+		path = [], // use for contain travel shorest value
 		find_path_index = 0
 
 	travel = []
@@ -78,7 +78,6 @@ const dijkstra = (graph, startNode, endNode) => {
 						v[k][l] =
 							u[choose[0]][choose[1]] + newGraph[choose[0]][choose[1]][k][l]
 						path[k][l] = choose
-						// console.log(v, path)
 					}
 				}
 			}
@@ -96,7 +95,6 @@ const dijkstra = (graph, startNode, endNode) => {
 					}
 				}
 			}
-			console.log(min, choose)
 			find_path[find_path_index] = choose
 			if (
 				(find_path[find_path_index][1] + 1 === endNode[1] &&
@@ -123,7 +121,7 @@ const dijkstra = (graph, startNode, endNode) => {
 	for (let j = 0; j < rowLength * colLength; j++) {
 		travel[j] = path[from[0]][from[1]]
 		from = path[from[0]][from[1]]
-		if (from[0] === start[0] && from[1] === start[1]) {
+		if (from[0] === startNode[0] && from[1] === startNode[1]) {
 			break
 		}
 	}

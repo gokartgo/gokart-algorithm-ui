@@ -3,6 +3,7 @@
   height: 20px;
   outline: 1px solid gray;
   display: inline-block;
+  transition: background-color 0.3s ease;
   &.node-start {
     background-color: green;
   }
