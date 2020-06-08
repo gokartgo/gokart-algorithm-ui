@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import Card from '/components/Card/Card'
+import './Main.scss'
 
 class Select extends Component {
 	constructor(props) {
@@ -7,7 +9,12 @@ class Select extends Component {
 	}
 
 	render() {
-		return <div>select</div>
+		return (
+			<div className='main-container'>
+				<Card />
+				<Card />
+			</div>
+		)
 	}
 }
 

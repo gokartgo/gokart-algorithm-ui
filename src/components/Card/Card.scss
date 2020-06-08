@@ -1,0 +1,24 @@
+.card-container {
+  display: inline-block;
+  width: 300px;
+  padding:  30px;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.025);
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    fill: #ce1b28;
+  }
+  .card-title {
+    font-weight: 300;
+  }
+  .card-detail {
+    line-height: 2;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .card-container {
+    margin-bottom: 30px
+  }
+}

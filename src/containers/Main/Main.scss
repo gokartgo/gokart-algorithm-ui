@@ -1,0 +1,11 @@
+.main-container {
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: 768px) {
+  .main-container {
+    flex-wrap: wrap;
+  }
+}
