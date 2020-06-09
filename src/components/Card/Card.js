@@ -3,26 +3,26 @@ import PropTypes from 'prop-types'
 import { ReactComponent as Sort } from '/assets/icon/sort.svg'
 import './Card.scss'
 
-const card = props => (
-	<section className='card-container'>
-		<header>
-			<Sort className='card-icon' />
-			<h3 className='card-title'>Sort</h3>
-			<p className='card-detail'>
-				- Quick Sort
-				<br />- Bubble Sort
-				<br />- Insert Sort
-			</p>
-		</header>
-	</section>
-)
+const card = props => {
+  const {
+    title,
+    detail,
+  } = props
+  return <section className='card-container'>
+    <header>
+      <Sort className='card-icon' />
+      <h3 className='card-title'>{title}</h3>
+      <p className='card-detail' dangerouslySetInnerHTML={{ __html: detail }} />
+    </header>
+  </section>
+}
 
 card.propTypes = {
-	btnType: PropTypes.string,
+  btnType: PropTypes.string,
 }
 
 card.defaultProps = {
-	btnType: '',
+  btnType: '',
 }
 
 export default card
