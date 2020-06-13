@@ -1,0 +1,15 @@
+.bar-container {
+  height: 500px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.bar {
+  display: inline;
+  background-color: red;
+  width: 7px;
+  border: 1px solid black;
+}
+.bar-select {
+  background-color: lawngreen;
+}
