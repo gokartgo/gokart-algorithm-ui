@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Fragment, Button } from '/components'
 import BubbleSort from '/algorithms/bubble_sort'
+import QuickSort from '/algorithms/quick_sort'
 import './SortVisualizer.scss'
 
 class SortVisualizer extends Component {
@@ -36,10 +37,18 @@ class SortVisualizer extends Component {
 		for (let i = 0; i < 100; i++) {
 			document.getElementById(`sort-${i}`).classList.remove('bar-select')
 		}
-		this.setArray()
+	}
+
+	quickSort() {
+		this.resetArray()
+		const { array, timeouts } = this.state
+		const newArray = array.map(data => data)
+		const newTimeouts = QuickSort(newArray, 0, newArray.length - 1, timeouts)
+		this.setState({ timeouts: newTimeouts })
 	}
 
 	bubbleSort() {
+		this.resetArray()
 		const { array, timeouts } = this.state
 		const newTimeouts = BubbleSort(array, timeouts)
 		this.setState({ timeouts: newTimeouts })
@@ -61,11 +70,19 @@ class SortVisualizer extends Component {
 						)
 					})}
 				</div>
-				<Button class='' clicked={() => this.resetArray()}>
+				<Button
+					class=''
+					clicked={() => {
+						this.resetArray()
+						this.setArray()
+					}}>
 					New Pattern
 				</Button>
 				<Button class='' clicked={() => this.bubbleSort()}>
 					Bubble Sort
+				</Button>
+				<Button class='' clicked={() => this.quickSort()}>
+					Quick Sort
 				</Button>
 			</Fragment>
 		)
