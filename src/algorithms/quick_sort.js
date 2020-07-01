@@ -1,5 +1,21 @@
-const time = 5000
+const time = 200
 let delay = 0
+
+const setSelectPivot = (index, timeouts) => {
+  timeouts.push(
+    setTimeout(() => {
+      document.getElementById(`sort-${index}`).classList.add('bar-pivot')
+    }, delay++ * time)
+  )
+}
+
+const deSelectPivot = (index, timeouts) => {
+  timeouts.push(
+    setTimeout(() => {
+      document.getElementById(`sort-${index}`).classList.remove('bar-pivot')
+    }, delay * time)
+  )
+}
 
 const setSelectFrontBar = (index, timeouts) => {
   timeouts.push(
@@ -9,10 +25,8 @@ const setSelectFrontBar = (index, timeouts) => {
           .getElementById(`sort-${index - 1}`)
           .classList.remove('bar-select')
       }
-      console.log('setSelectFrontBar', index, document.getElementById(`sort-${index}`).innerText)
       document.getElementById(`sort-${index}`).classList.add('bar-select')
-    }, delay++ * time),
-    10,
+    }, delay++ * time)
   )
 }
 
@@ -24,10 +38,8 @@ const setSelectBackBar = (index, back, timeouts) => {
           .getElementById(`sort-${index + 1}`)
           .classList.remove('bar-select')
       }
-      console.log('setSelectBackBar', index, document.getElementById(`sort-${index}`).innerText)
       document.getElementById(`sort-${index}`).classList.add('bar-select')
-    }, delay++ * time),
-    10,
+    }, delay++ * time)
   )
 }
 
@@ -35,8 +47,7 @@ const setSelect = (index, timeouts) => {
   timeouts.push(
     setTimeout(() => {
       document.getElementById(`sort-${index}`).classList.add('bar-select')
-    }, delay++ * time),
-    10,
+    }, delay++ * time)
   )
 }
 
@@ -51,17 +62,10 @@ const swap = (array, index_before, index_after, timeouts) => {
       document.getElementById(
         `sort-${index_before}`,
       ).style.height = `${before}px`
-      document.getElementById(
-        `sort-${index_before}`,
-      ).innerHTML = before
-      document.getElementById(
-        `sort-${index_after}`,
-      ).style.height = `${after}px`
-      document.getElementById(
-        `sort-${index_after}`,
-      ).innerHTML = after
-    }, delay++ * time),
-    10,
+      document.getElementById(`sort-${index_before}`).innerHTML = before
+      document.getElementById(`sort-${index_after}`).style.height = `${after}px`
+      document.getElementById(`sort-${index_after}`).innerHTML = after
+    }, delay++ * time)
   )
 }
 
@@ -72,11 +76,14 @@ const quicksort = (arr, start, end, timeouts) => {
   let i = start,
     j = end
   let pivot = arr[start]
+  setSelectPivot(start, timeouts)
   while (i < j) {
+    setSelectFrontBar(i, timeouts)
     while (pivot >= arr[i] && i < j) {
       i++
       setSelectFrontBar(i, timeouts)
     }
+    setSelectBackBar(j, arr.length - 1, timeouts)
     while (pivot < arr[j] && i <= j) {
       j--
       setSelectBackBar(j, arr.length - 1, timeouts)
@@ -86,6 +93,7 @@ const quicksort = (arr, start, end, timeouts) => {
     }
   }
   swap(arr, start, j, timeouts)
+  deSelectPivot(start, timeouts)
   quicksort(arr, start, j - 1, timeouts)
   quicksort(arr, j + 1, end, timeouts)
   setSelect(j, timeouts)
@@ -98,13 +106,13 @@ const startQuickSort = (arr, start, end, timeouts, cb) => {
     timeouts.push(
       setTimeout(() => {
         document.getElementById(`sort-${i}`).classList.remove('bar-select')
-      }, delay * time + 10 * i),
+      }, delay * time + 10 * i)
     )
   }
   timeouts.push(
     setTimeout(() => {
       cb(arr)
-    }, delay * time + 10 * arr.length),
+    }, delay * time + 10 * arr.length)
   )
   return timeouts
 }
