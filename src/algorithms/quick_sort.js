@@ -1,4 +1,4 @@
-const time = 5
+const time = 5000
 let delay = 0
 
 const setSelectFrontBar = (index, timeouts) => {
@@ -9,6 +9,7 @@ const setSelectFrontBar = (index, timeouts) => {
           .getElementById(`sort-${index - 1}`)
           .classList.remove('bar-select')
       }
+      console.log('setSelectFrontBar', index, document.getElementById(`sort-${index}`).innerText)
       document.getElementById(`sort-${index}`).classList.add('bar-select')
     }, delay++ * time),
     10,
@@ -23,6 +24,16 @@ const setSelectBackBar = (index, back, timeouts) => {
           .getElementById(`sort-${index + 1}`)
           .classList.remove('bar-select')
       }
+      console.log('setSelectBackBar', index, document.getElementById(`sort-${index}`).innerText)
+      document.getElementById(`sort-${index}`).classList.add('bar-select')
+    }, delay++ * time),
+    10,
+  )
+}
+
+const setSelect = (index, timeouts) => {
+  timeouts.push(
+    setTimeout(() => {
       document.getElementById(`sort-${index}`).classList.add('bar-select')
     }, delay++ * time),
     10,
@@ -33,14 +44,22 @@ const swap = (array, index_before, index_after, timeouts) => {
   let temp = array[index_before]
   array[index_before] = array[index_after]
   array[index_after] = temp
+  let before = array[index_before]
+  let after = array[index_after]
   timeouts.push(
     setTimeout(() => {
       document.getElementById(
         `sort-${index_before}`,
-      ).style.height = `${array[index_before]}px`
+      ).style.height = `${before}px`
+      document.getElementById(
+        `sort-${index_before}`,
+      ).innerHTML = before
       document.getElementById(
         `sort-${index_after}`,
-      ).style.height = `${array[index_after]}px`
+      ).style.height = `${after}px`
+      document.getElementById(
+        `sort-${index_after}`,
+      ).innerHTML = after
     }, delay++ * time),
     10,
   )
@@ -55,21 +74,21 @@ const quicksort = (arr, start, end, timeouts) => {
   let pivot = arr[start]
   while (i < j) {
     while (pivot >= arr[i] && i < j) {
-      setSelectFrontBar(i, timeouts)
       i++
+      setSelectFrontBar(i, timeouts)
     }
     while (pivot < arr[j] && i <= j) {
-      setSelectBackBar(j, arr.length - 1, timeouts)
       j--
+      setSelectBackBar(j, arr.length - 1, timeouts)
     }
     if (i < j) {
       swap(arr, i, j, timeouts)
-      j--
     }
   }
   swap(arr, start, j, timeouts)
   quicksort(arr, start, j - 1, timeouts)
   quicksort(arr, j + 1, end, timeouts)
+  setSelect(j, timeouts)
 }
 
 const startQuickSort = (arr, start, end, timeouts, cb) => {

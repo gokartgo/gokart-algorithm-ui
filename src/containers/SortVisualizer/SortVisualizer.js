@@ -23,7 +23,7 @@ class SortVisualizer extends Component {
 
   setArray() {
     const array = []
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 30; i++) {
       array.push(this.randomIntFromInterval(5, 400))
     }
     this.setState({ array, timeouts: [] })
@@ -34,7 +34,7 @@ class SortVisualizer extends Component {
     for (let i = 0; i < timeouts.length; i++) {
       clearTimeout(timeouts[i])
     }
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 30; i++) {
       document.getElementById(`sort-${i}`).classList.remove('bar-select')
     }
   }
@@ -68,7 +68,7 @@ class SortVisualizer extends Component {
                 style={{ height: `${value}px` }}
                 key={`sort-${idx}`}
                 id={`sort-${idx}`}
-              />
+              >{value}</div>
             )
           })}
         </div>
