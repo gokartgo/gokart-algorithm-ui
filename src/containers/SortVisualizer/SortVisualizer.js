@@ -4,6 +4,9 @@ import BubbleSort from '/algorithms/bubble_sort'
 import QuickSort from '/algorithms/quick_sort'
 import './SortVisualizer.scss'
 
+const SUM_OF_BAR = 100
+const BAR_CONTAINER_WIDTH = 550
+
 class SortVisualizer extends Component {
   constructor(props) {
     super(props)
@@ -23,7 +26,7 @@ class SortVisualizer extends Component {
 
   setArray() {
     const array = []
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < SUM_OF_BAR; i++) {
       array.push(this.randomIntFromInterval(5, 400))
     }
     this.setState({ array, timeouts: [] })
@@ -34,7 +37,7 @@ class SortVisualizer extends Component {
     for (let i = 0; i < timeouts.length; i++) {
       clearTimeout(timeouts[i])
     }
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < SUM_OF_BAR; i++) {
       document.getElementById(`sort-${i}`).classList.remove('bar-select')
     }
   }
@@ -65,10 +68,13 @@ class SortVisualizer extends Component {
             return (
               <div
                 className='bar'
-                style={{ height: `${value}px` }}
+                style={{
+                  height: `${value}px`,
+                  width: `${BAR_CONTAINER_WIDTH / SUM_OF_BAR}px`
+                }}
                 key={`sort-${idx}`}
                 id={`sort-${idx}`}
-              >{value}</div>
+              />
             )
           })}
         </div>

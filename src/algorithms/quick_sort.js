@@ -1,4 +1,4 @@
-const time = 200
+const time = 10
 let delay = 0
 
 const setSelectPivot = (index, timeouts) => {
@@ -62,9 +62,7 @@ const swap = (array, index_before, index_after, timeouts) => {
       document.getElementById(
         `sort-${index_before}`,
       ).style.height = `${before}px`
-      document.getElementById(`sort-${index_before}`).innerHTML = before
       document.getElementById(`sort-${index_after}`).style.height = `${after}px`
-      document.getElementById(`sort-${index_after}`).innerHTML = after
     }, delay++ * time)
   )
 }

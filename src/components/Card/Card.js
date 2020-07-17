@@ -7,8 +7,9 @@ const card = props => {
   const {
     title,
     detail,
+    onclick,
   } = props
-  return <section className='card-container'>
+  return <section className='card-container' onClick={() => onclick()}>
     <header>
       <Sort className='card-icon' />
       <h3 className='card-title'>{title}</h3>

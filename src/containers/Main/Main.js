@@ -16,10 +16,12 @@ class Select extends Component {
           <Card
             title='Sort'
             detail={'- Quick Sort<br />- Bubble Sort<br />- Insert Sort'}
+            onclick={() => this.props.history.push('/sort')}
           />
           <Card
             title='Shortest Path'
             detail={'- dijkstra<br />'}
+            onclick={() => this.props.history.push('/shorest-path')}
           />
         </div>
       </div>
