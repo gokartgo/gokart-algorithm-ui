@@ -16,6 +16,8 @@ class PathfindingVisualizer extends PureComponent {
 			endNode: { row: END_ROW, col: END_COLUMN },
 			nodes: [],
 			isCreateBlock: false,
+			selectStart: false,
+			selectEnd: false,
 		}
 	}
 
@@ -93,18 +95,55 @@ class PathfindingVisualizer extends PureComponent {
 	}
 
 	clickBlock = (rowIndex, nodeIndex) => {
-		const { nodes, isCreateBlock, startNode, endNode } = this.state
+		const {
+			nodes,
+			isCreateBlock,
+			startNode,
+			endNode,
+			selectStart,
+			selectEnd,
+		} = this.state
 		if (
 			(rowIndex !== startNode.row || nodeIndex !== startNode.col) &&
 			(rowIndex !== endNode.row || nodeIndex !== endNode.col)
 		) {
-			this.setWall(nodes, rowIndex, nodeIndex)
-			this.setState({ nodes, isCreateBlock: !isCreateBlock })
+			if (
+				selectStart &&
+				(rowIndex !== endNode.row || nodeIndex !== endNode.col)
+			) {
+				this.setState({
+					startNode: { row: rowIndex, col: nodeIndex },
+					selectStart: !selectStart,
+				})
+			} else if (
+				selectEnd &&
+				(rowIndex !== startNode.row || nodeIndex !== startNode.col)
+			) {
+				this.setState({
+					endNode: { row: rowIndex, col: nodeIndex },
+					selectEnd: !selectEnd,
+				})
+			} else {
+				this.setWall(nodes, rowIndex, nodeIndex)
+				this.setState({ nodes, isCreateBlock: !isCreateBlock })
+			}
+		} else if (
+			rowIndex === startNode.row &&
+			nodeIndex === startNode.col &&
+			selectEnd === false
+		) {
+			this.setState({ selectStart: !selectStart })
+		} else if (
+			rowIndex === endNode.row &&
+			nodeIndex === endNode.col &&
+			selectStart === false
+		) {
+			this.setState({ selectEnd: !selectEnd })
 		}
 	}
 
 	render() {
-		const { nodes } = this.state
+		const { nodes, startNode, endNode } = this.state
 		return (
 			<Fragment>
 				<button
@@ -117,12 +156,16 @@ class PathfindingVisualizer extends PureComponent {
 						return (
 							<div id={`row-${rowIndex}`}>
 								{row.map((node, nodeIndex) => {
-									const { isStart, isFinish } = node
 									return (
 										<Node
 											id={`node-${rowIndex}-${nodeIndex}`}
-											isStart={isStart}
-											isFinish={isFinish}
+											isStart={
+												rowIndex === startNode.row &&
+												nodeIndex === startNode.col
+											}
+											isFinish={
+												rowIndex === endNode.row && nodeIndex === endNode.col
+											}
 											clicked={() => {
 												this.clickBlock(rowIndex, nodeIndex)
 											}}
