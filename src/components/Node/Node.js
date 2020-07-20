@@ -8,16 +8,13 @@ class Node extends Component {
 	}
 
 	render() {
-		const { isStart, isFinish, isVisited, id, clicked, mouseOver } = this.props
+		const { isStart, isFinish, id, clicked, mouseOver } = this.props
 		let className = 'node'
 		if (isStart) {
 			className += ' node-start'
 		}
 		if (isFinish) {
 			className += ' node-finish'
-		}
-		if (isVisited && !isStart && !isFinish) {
-			className += ' node-visited'
 		}
 		return (
 			<div

@@ -1,4 +1,4 @@
-const time = 10
+const time = 2
 let delay = 0
 
 const setSelectPivot = (index, timeouts) => {

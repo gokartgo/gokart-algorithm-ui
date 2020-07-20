@@ -12,6 +12,8 @@ class PathfindingVisualizer extends PureComponent {
 	constructor(props) {
 		super(props)
 		this.state = {
+			startNode: { row: START_ROW, col: START_COLUMN },
+			endNode: { row: END_ROW, col: END_COLUMN },
 			nodes: [],
 			isCreateBlock: false,
 		}
@@ -31,21 +33,28 @@ class PathfindingVisualizer extends PureComponent {
 	}
 
 	createNode = (row, col) => {
+		const { startNode, endNode } = this.state
+
 		return {
 			row,
 			col,
-			isStart: row === START_ROW && col === START_COLUMN ? true : false,
-			isFinish: row === END_ROW && col === END_COLUMN ? true : false,
-			isVisited: false,
+			isStart: row === startNode.row && col === startNode.col ? true : false,
+			isFinish: row === endNode.row && col === endNode.col ? true : false,
 		}
 	}
 
 	visualizeDijkstra = async () => {
-		const { nodes } = this.state
-		const startNode = [START_ROW, START_COLUMN]
-		const endNode = [END_ROW, END_COLUMN]
-		const findPath = findPathGraph(nodes, startNode, endNode)
-		const travel = travelGraph(nodes, startNode, endNode)
+		const { nodes, startNode, endNode } = this.state
+		const findPath = findPathGraph(
+			nodes,
+			[startNode.row, startNode.col],
+			[endNode.row, endNode.col],
+		)
+		const travel = travelGraph(
+			nodes,
+			[startNode.row, startNode.col],
+			[endNode.row, endNode.col],
+		)
 		for (let i = 0; i < findPath.length; i++) {
 			setTimeout(() => {
 				document
@@ -72,17 +81,26 @@ class PathfindingVisualizer extends PureComponent {
 	}
 
 	mouseOverBlock = (rowIndex, nodeIndex) => {
-		const { nodes, isCreateBlock } = this.state
-		if (isCreateBlock) {
+		const { nodes, isCreateBlock, startNode, endNode } = this.state
+		if (
+			isCreateBlock &&
+			(rowIndex !== startNode.row || nodeIndex !== startNode.col) &&
+			(rowIndex !== endNode.row || nodeIndex !== endNode.col)
+		) {
 			this.setWall(nodes, rowIndex, nodeIndex)
 			this.setState({ nodes })
 		}
 	}
 
 	clickBlock = (rowIndex, nodeIndex) => {
-		const { nodes, isCreateBlock } = this.state
-		this.setWall(nodes, rowIndex, nodeIndex)
-		this.setState({ nodes, isCreateBlock: !isCreateBlock })
+		const { nodes, isCreateBlock, startNode, endNode } = this.state
+		if (
+			(rowIndex !== startNode.row || nodeIndex !== startNode.col) &&
+			(rowIndex !== endNode.row || nodeIndex !== endNode.col)
+		) {
+			this.setWall(nodes, rowIndex, nodeIndex)
+			this.setState({ nodes, isCreateBlock: !isCreateBlock })
+		}
 	}
 
 	render() {
@@ -99,13 +117,12 @@ class PathfindingVisualizer extends PureComponent {
 						return (
 							<div id={`row-${rowIndex}`}>
 								{row.map((node, nodeIndex) => {
-									const { isStart, isFinish, isVisited } = node
+									const { isStart, isFinish } = node
 									return (
 										<Node
 											id={`node-${rowIndex}-${nodeIndex}`}
 											isStart={isStart}
 											isFinish={isFinish}
-											isVisited={isVisited}
 											clicked={() => {
 												this.clickBlock(rowIndex, nodeIndex)
 											}}
