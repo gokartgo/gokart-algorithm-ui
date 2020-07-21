@@ -3,14 +3,19 @@
   height: 20px;
   outline: 1px solid gray;
   display: inline-block;
-  transition: background-color 0.3s ease;
   &.node-start {
     background-color: green;
+    transition: background-color 0.3s ease;
   }
   &.node-finish {
     background-color: red;
+    transition: background-color 0.3s ease;
   }
   &.node-visited {
     background-color: blue;
+  }
+  &.node-select {
+    border: 2px solid black;
+    box-sizing: border-box;
   }
 }

@@ -41,7 +41,7 @@ class PathfindingVisualizer extends PureComponent {
 			row,
 			col,
 			isStart: row === startNode.row && col === startNode.col ? true : false,
-			isFinish: row === endNode.row && col === endNode.col ? true : false,
+			isEnd: row === endNode.row && col === endNode.col ? true : false,
 		}
 	}
 
@@ -94,6 +94,13 @@ class PathfindingVisualizer extends PureComponent {
 		}
 	}
 
+	isWall = (rowIndex, nodeIndex) => {
+		const { nodes } = this.state
+		return (
+			nodes[rowIndex][nodeIndex].row < 0 && nodes[rowIndex][nodeIndex].col < 0
+		)
+	}
+
 	clickBlock = (rowIndex, nodeIndex) => {
 		const {
 			nodes,
@@ -103,11 +110,13 @@ class PathfindingVisualizer extends PureComponent {
 			selectStart,
 			selectEnd,
 		} = this.state
+
 		if (
 			(rowIndex !== startNode.row || nodeIndex !== startNode.col) &&
 			(rowIndex !== endNode.row || nodeIndex !== endNode.col)
 		) {
 			if (
+				!this.isWall(rowIndex, nodeIndex) &&
 				selectStart &&
 				(rowIndex !== endNode.row || nodeIndex !== endNode.col)
 			) {
@@ -116,6 +125,7 @@ class PathfindingVisualizer extends PureComponent {
 					selectStart: !selectStart,
 				})
 			} else if (
+				!this.isWall(rowIndex, nodeIndex) &&
 				selectEnd &&
 				(rowIndex !== startNode.row || nodeIndex !== startNode.col)
 			) {
@@ -143,7 +153,7 @@ class PathfindingVisualizer extends PureComponent {
 	}
 
 	render() {
-		const { nodes, startNode, endNode } = this.state
+		const { nodes, startNode, endNode, selectStart, selectEnd } = this.state
 		return (
 			<Fragment>
 				<button
@@ -163,9 +173,11 @@ class PathfindingVisualizer extends PureComponent {
 												rowIndex === startNode.row &&
 												nodeIndex === startNode.col
 											}
-											isFinish={
+											isEnd={
 												rowIndex === endNode.row && nodeIndex === endNode.col
 											}
+											selectStart={selectStart}
+											selectEnd={selectEnd}
 											clicked={() => {
 												this.clickBlock(rowIndex, nodeIndex)
 											}}

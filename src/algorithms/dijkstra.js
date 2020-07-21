@@ -126,10 +126,11 @@ const dijkstra = (graph, startNode, endNode) => {
 		}
 	}
 
-	return [find_path, travel]
+	// return [find_path, travel]
 }
 
 export const findPathGraph = (graph, startNode, endNode) => {
+	console.log('findPathGraph', graph)
 	if (find_path === null) {
 		dijkstra(graph, startNode, endNode)
 	}
@@ -137,6 +138,7 @@ export const findPathGraph = (graph, startNode, endNode) => {
 }
 
 export const travelGraph = (graph, startNode, endNode) => {
+	console.log('travelGraph', graph)
 	if (travel === null) {
 		dijkstra(graph, startNode, endNode)
 	}
