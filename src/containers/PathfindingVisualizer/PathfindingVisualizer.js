@@ -133,7 +133,7 @@ class PathfindingVisualizer extends PureComponent {
 					endNode: { row: rowIndex, col: nodeIndex },
 					selectEnd: !selectEnd,
 				})
-			} else {
+			} else if (!selectStart && !selectEnd) {
 				this.setWall(nodes, rowIndex, nodeIndex)
 				this.setState({ nodes, isCreateBlock: !isCreateBlock })
 			}
