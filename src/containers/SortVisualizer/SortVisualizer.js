@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Fragment, Button } from '/components'
 import BubbleSort from '/algorithms/bubble_sort'
 import QuickSort from '/algorithms/quick_sort'
+import MergeSort from '/algorithms/merge_sort'
 import './SortVisualizer.scss'
 
 const SUM_OF_BAR = 100
@@ -59,6 +60,17 @@ class SortVisualizer extends Component {
     this.setState({ timeouts: newTimeouts })
   }
 
+  mergeSort() {
+    this.resetArray()
+    const { array, timeouts } = this.state
+    const newArray = array.map(data => data)
+    const newTimeouts = MergeSort(newArray, 0, newArray.length - 1, timeouts, (arr) => this.setState({ array: arr }, () => {
+      console.log(this.state.array)
+    }))
+    console.log('timeouts', timeouts)
+    this.setState({ timeouts: newTimeouts })
+  }
+
   render() {
     const { array } = this.state
     return (
@@ -91,6 +103,9 @@ class SortVisualizer extends Component {
 				</Button>
         <Button class='' clicked={() => this.quickSort()}>
           Quick Sort
+				</Button>
+        <Button class='' clicked={() => this.mergeSort()}>
+          Merge Sort
 				</Button>
       </Fragment>
     )
