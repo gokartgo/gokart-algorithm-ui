@@ -15,7 +15,7 @@ class Select extends Component {
         <div className='main-card-container'>
           <Card
             title='Sort'
-            detail={'- Quick Sort<br />- Bubble Sort<br />- Insert Sort'}
+            detail={'- Quick Sort<br />- Bubble Sort<br />- Merge Sort'}
             onclick={() => this.props.history.push('/sort')}
           />
           <Card
