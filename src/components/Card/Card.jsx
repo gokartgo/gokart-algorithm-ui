@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ReactComponent as Sort } from '/assets/icon/sort.svg'
+import Sort from '@/assets/icon/sort.svg?react'
 import './Card.scss'
 
 const card = props => {

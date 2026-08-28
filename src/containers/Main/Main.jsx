@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Card from '/components/Card/Card'
+import Card from '@/components/Card/Card'
 import './Main.scss'
 
 class Select extends Component {

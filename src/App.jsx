@@ -1,9 +1,9 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import Main from '/containers/Main/Main'
-import PathfindingVisualizer from '/containers/PathfindingVisualizer/PathfindingVisualizer'
-import SortVisualizer from '/containers/SortVisualizer/SortVisualizer'
-import '/App.css'
+import Main from '@/containers/Main/Main'
+import PathfindingVisualizer from '@/containers/PathfindingVisualizer/PathfindingVisualizer'
+import SortVisualizer from '@/containers/SortVisualizer/SortVisualizer'
+import '@/App.css'
 
 function App() {
   return (

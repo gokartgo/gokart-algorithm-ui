@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
-import { Node, Fragment } from '/components'
-import { findPathGraph, travelGraph } from '/algorithms/dijkstra'
+import { Node, Fragment } from '@/components'
+import { findPathGraph, travelGraph } from '@/algorithms/dijkstra'
 import './PathfindingVisualizer.scss'
 
 const START_ROW = 5

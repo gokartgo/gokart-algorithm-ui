@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Fragment, Button } from '/components'
-import BubbleSort from '/algorithms/bubble_sort'
-import QuickSort from '/algorithms/quick_sort'
-import MergeSort from '/algorithms/merge_sort'
+import { Fragment, Button } from '@/components'
+import BubbleSort from '@/algorithms/bubble_sort'
+import QuickSort from '@/algorithms/quick_sort'
+import MergeSort from '@/algorithms/merge_sort'
 import './SortVisualizer.scss'
 
 const SUM_OF_BAR = 100
