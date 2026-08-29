@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Card from '@/components/Card/Card'
 import './Main.scss'
 
@@ -16,12 +17,12 @@ class Select extends Component {
           <Card
             title='Sort'
             detail={'- Quick Sort<br />- Bubble Sort<br />- Merge Sort'}
-            onclick={() => this.props.history.push('/sort')}
+            onclick={() => this.props.navigate('/sort')}
           />
           <Card
             title='Shortest Path'
             detail={'- dijkstra<br />'}
-            onclick={() => this.props.history.push('/shorest-path')}
+            onclick={() => this.props.navigate('/shorest-path')}
           />
         </div>
       </div>
@@ -29,4 +30,9 @@ class Select extends Component {
   }
 }
 
-export default Select
+function Main() {
+  const navigate = useNavigate()
+  return <Select navigate={navigate} />
+}
+
+export default Main

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-A Vite + React 16 (class components) app that visualizes algorithms in the browser: three sorting algorithms (bubble, quick, merge) as animated bars, and Dijkstra pathfinding on a clickable grid. Originally bootstrapped with Create React App, migrated to Vite — see "Absolute-looking imports" and the Commands section below for what that changed.
+A Vite + React 19 (class components) app that visualizes algorithms in the browser: three sorting algorithms (bubble, quick, merge) as animated bars, and Dijkstra pathfinding on a clickable grid. Originally bootstrapped with Create React App, migrated to Vite — see "Absolute-looking imports" and the Commands section below for what that changed.
 
 ## Commands
 
@@ -18,8 +18,6 @@ Package manager is npm (`package-lock.json` is the lockfile; there is no `yarn.l
 - No separate lint/format script exists. CRA's webpack-integrated ESLint feedback (`eslintConfig` in `package.json`) went away with `react-scripts` and was not replaced — Vite doesn't lint by default. Prettier (`.prettierrc.json`: tabs, no semicolons, single quotes) is applied via editor `formatOnSave` (`.vscode/settings.json`), not a CLI command.
 
 The Node/OpenSSL `--openssl-legacy-provider` workaround this project used to need (react-scripts 3.4.1 → webpack 4 crashing on Node ≥17) no longer applies — Vite's toolchain (esbuild/oxc/Rolldown) doesn't touch that code path.
-
-`src/App.test.jsx` fails regardless of Node/tooling version: it renders `<App />` without a `<Router>`, and `App.jsx` renders a `<Switch>`, which throws `Invariant failed: You should not use <Switch> outside a <Router>`. This is pre-existing (confirmed still true after the Vite migration), not something you broke — wrap with `MemoryRouter` if you touch that test.
 
 ## Architecture
 
@@ -35,22 +33,24 @@ Historical note: pre-Vite, this was a bare `/foo` alias (`babel-plugin-module-re
 
 ### SVG-as-component imports
 
-`src/components/Card/Card.jsx` imports its icon as `import Sort from '@/assets/icon/sort.svg?react'` (via the `vite-plugin-svgr` plugin configured in `vite.config.ts`) rather than a plain URL import — the `?react` suffix is what turns it into a React component instead of an asset URL. `svgrOptions.jsxRuntime` and `oxcOptions.jsx.runtime` are both explicitly set to `'classic'` there; don't drop those (see "React 16 and the JSX runtime" below).
+`src/components/Card/Card.jsx` imports its icon as `import Sort from '@/assets/icon/sort.svg?react'` (via the `vite-plugin-svgr` plugin configured in `vite.config.ts`) rather than a plain URL import — the `?react` suffix is what turns it into a React component instead of an asset URL.
 
-### React 16 and the JSX runtime
+### JSX runtime
 
-This project is pinned to `react@16.13.1`, which predates `react/jsx-runtime` (added in 16.14). Both `@vitejs/plugin-react` (`jsxRuntime: 'classic'`) and `vite-plugin-svgr` (`oxcOptions.jsx.runtime: 'classic'`) in `vite.config.ts` are configured for the classic runtime for this reason — switching either to the default "automatic" runtime will break at runtime with a failed `react/jsx-runtime` resolution, not a build-time error.
+Both `@vitejs/plugin-react` and `vite-plugin-svgr` in `vite.config.ts` use their default automatic `react/jsx-runtime` transform. This project used to be pinned to `react@16.13.1`, which predates `react/jsx-runtime` (added in 16.14) and forced both plugins into explicit `jsxRuntime: 'classic'` config — now that the project is on React 19, that pin is gone; don't reintroduce it unless downgrading React below 16.14.
 
 ### Routing
 
-`src/index.jsx` wraps `<App />` in `BrowserRouter`. `src/App.jsx` holds the only routes, inside one `<Switch>`:
+`src/index.jsx` wraps `<App />` in `BrowserRouter`. `src/App.jsx` holds the only routes, inside one `<Routes>` (react-router-dom v7's declarative/library-mode API — `BrowserRouter`/`Routes`/`Route`/`useNavigate` are re-exported unchanged from the `react-router-dom` package, no framework-mode/file-based routing involved):
 - `/shorest-path` → `PathfindingVisualizer` (this misspelling of "shortest" is the real, live route — not a typo to casually "fix")
 - `/sort` → `SortVisualizer`
-- `/` → `Main` (landing page, links out via `Card` clicks)
+- `*` → `Main` (landing page, links out via `Card` clicks — also the fallback for any unrecognized path; `Routes` matches exact-by-default unlike v5's `Switch`, so the catch-all needs `*` rather than a bare `/`)
+
+`Main.jsx`'s default export is a function-component wrapper (`function Main() { const navigate = useNavigate(); return <Select navigate={navigate} /> }`) around an internal class component (`Select`), which is where the actual page lives. This bridges router navigation into the class component: v5 used to auto-inject a `history` prop into components rendered via `<Route component={X} />`, but v7's `element={<X />}` form doesn't inject anything, and its replacement (`useNavigate()`) is hook-only — hence the wrapper.
 
 ### `containers/` vs `components/`
 
-- `src/containers/*` — one per route/page (`Main`, `PathfindingVisualizer`, `SortVisualizer`), each a class component (`.jsx`) with a co-located `.scss` of the same name.
+- `src/containers/*` — one per route/page (`Main`, `PathfindingVisualizer`, `SortVisualizer`), each a class component (`.jsx`) with a co-located `.scss` of the same name. Exception: `Main.jsx`'s default export is a thin function-component wrapper (needed to call the `useNavigate` hook — see "Routing" below) around its actual class component, `Select`.
 - `src/components/*` — smaller reusable pieces (`Button`, `Card`, `Fragment`, `Node`), each in its own folder with a co-located `.scss`. `src/components/index.js` is a barrel exporting only `Button`, `Fragment`, `Node` — **`Card` is intentionally left out** and is always imported by its direct path (`@/components/Card/Card`); match that existing pattern rather than folding it into the barrel unless asked to.
 - `Fragment` is a custom component (`props => props.children`) that shadows `React.Fragment`, used project-wide instead of `<>...</>`. It contains no JSX itself, so — like the barrel `index.js` and the `algorithms/*` modules — it stays a plain `.js` file; only files that actually contain JSX were renamed to `.jsx` in the Vite migration.
 

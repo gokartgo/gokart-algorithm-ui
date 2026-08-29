@@ -1,17 +1,14 @@
 import path from 'node:path'
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 
-// React 16.13.1 predates `react/jsx-runtime` (added in 16.14), so both the app's own JSX
-// and svgr's generated icon components must use the classic runtime (`React.createElement`).
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export default defineConfig({
-	plugins: [
-		react({ jsxRuntime: 'classic' }),
-		// `svgrOptions.jsxRuntime` only affects the intermediate JSX svgr generates; the actual
-		// JSX-to-JS lowering is a separate step controlled by `oxcOptions.jsx.runtime`.
-		svgr({ svgrOptions: { jsxRuntime: 'classic' }, oxcOptions: { jsx: { runtime: 'classic' } } }),
-	],
+	plugins: [react(), svgr()],
 	resolve: {
 		alias: [{ find: '@', replacement: path.resolve(__dirname, 'src') }],
 	},
