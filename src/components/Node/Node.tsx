@@ -1,8 +1,18 @@
 import React, { Component } from 'react'
 import './Node.scss'
 
-class Node extends Component {
-	constructor(props) {
+interface NodeProps {
+	id: string
+	isStart?: boolean
+	isEnd?: boolean
+	selectStart?: boolean
+	selectEnd?: boolean
+	clicked: () => void
+	mouseOver: () => void
+}
+
+class Node extends Component<NodeProps> {
+	constructor(props: NodeProps) {
 		super(props)
 		this.state = {}
 	}

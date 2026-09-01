@@ -1,9 +1,15 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Sort from '@/assets/icon/sort.svg?react'
 import './Card.scss'
 
-const card = props => {
+interface CardProps {
+  title: string
+  detail: string
+  onclick: () => void
+  btnType?: string
+}
+
+const card = (props: CardProps) => {
   const {
     title,
     detail,
@@ -16,14 +22,6 @@ const card = props => {
       <p className='card-detail' dangerouslySetInnerHTML={{ __html: detail }} />
     </header>
   </section>
-}
-
-card.propTypes = {
-  btnType: PropTypes.string,
-}
-
-card.defaultProps = {
-  btnType: '',
 }
 
 export default card
