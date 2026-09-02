@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, type NavigateFunction } from 'react-router-dom'
 import Card from '@/components/Card/Card'
 import './Main.scss'
 
-class Select extends Component {
-  constructor(props) {
+interface SelectProps {
+  navigate: NavigateFunction
+}
+
+class Select extends Component<SelectProps> {
+  constructor(props: SelectProps) {
     super(props)
     this.state = {}
   }

@@ -8,8 +8,29 @@ const START_COLUMN = 2
 const END_ROW = 8
 const END_COLUMN = 45
 
-class PathfindingVisualizer extends PureComponent {
-	constructor(props) {
+interface NodePosition {
+	row: number
+	col: number
+}
+
+interface GridNode {
+	row: number
+	col: number
+	isStart: boolean
+	isEnd: boolean
+}
+
+interface PathfindingVisualizerState {
+	startNode: NodePosition
+	endNode: NodePosition
+	nodes: GridNode[][]
+	isCreateBlock: boolean
+	selectStart: boolean
+	selectEnd: boolean
+}
+
+class PathfindingVisualizer extends PureComponent<{}, PathfindingVisualizerState> {
+	constructor(props: {}) {
 		super(props)
 		this.state = {
 			startNode: { row: START_ROW, col: START_COLUMN },
@@ -22,9 +43,9 @@ class PathfindingVisualizer extends PureComponent {
 	}
 
 	componentDidMount() {
-		const nodes = []
+		const nodes: GridNode[][] = []
 		for (let row = 0; row < 15; row++) {
-			const currentRow = []
+			const currentRow: GridNode[] = []
 			for (let col = 0; col < 50; col++) {
 				const currnetNode = this.createNode(row, col)
 				currentRow.push(currnetNode)
@@ -34,7 +55,7 @@ class PathfindingVisualizer extends PureComponent {
 		this.setState({ nodes })
 	}
 
-	createNode = (row, col) => {
+	createNode = (row: number, col: number): GridNode => {
 		const { startNode, endNode } = this.state
 
 		return {
@@ -74,7 +95,7 @@ class PathfindingVisualizer extends PureComponent {
 		}
 	}
 
-	setWall = (nodes, rowIndex, nodeIndex) => {
+	setWall = (nodes: GridNode[][], rowIndex: number, nodeIndex: number) => {
 		document.getElementById(
 			`node-${rowIndex}-${nodeIndex}`,
 		).style.backgroundColor = 'orange'
@@ -82,7 +103,7 @@ class PathfindingVisualizer extends PureComponent {
 		nodes[rowIndex][nodeIndex].col = -Math.abs(nodes[rowIndex][nodeIndex].col)
 	}
 
-	mouseOverBlock = (rowIndex, nodeIndex) => {
+	mouseOverBlock = (rowIndex: number, nodeIndex: number) => {
 		const { nodes, isCreateBlock, startNode, endNode } = this.state
 		if (
 			isCreateBlock &&
@@ -94,14 +115,14 @@ class PathfindingVisualizer extends PureComponent {
 		}
 	}
 
-	isWall = (rowIndex, nodeIndex) => {
+	isWall = (rowIndex: number, nodeIndex: number) => {
 		const { nodes } = this.state
 		return (
 			nodes[rowIndex][nodeIndex].row < 0 && nodes[rowIndex][nodeIndex].col < 0
 		)
 	}
 
-	clickBlock = (rowIndex, nodeIndex) => {
+	clickBlock = (rowIndex: number, nodeIndex: number) => {
 		const {
 			nodes,
 			isCreateBlock,

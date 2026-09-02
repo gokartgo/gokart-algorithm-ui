@@ -8,8 +8,13 @@ import './SortVisualizer.scss'
 const SUM_OF_BAR = 100
 const BAR_CONTAINER_WIDTH = 550
 
-class SortVisualizer extends Component {
-  constructor(props) {
+interface SortVisualizerState {
+  array: number[]
+  timeouts: number[]
+}
+
+class SortVisualizer extends Component<{}, SortVisualizerState> {
+  constructor(props: {}) {
     super(props)
     this.state = {
       array: [],
@@ -21,12 +26,12 @@ class SortVisualizer extends Component {
     this.setArray()
   }
 
-  randomIntFromInterval(min, max) {
+  randomIntFromInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
   setArray() {
-    const array = []
+    const array: number[] = []
     for (let i = 0; i < SUM_OF_BAR; i++) {
       array.push(this.randomIntFromInterval(5, 400))
     }
@@ -47,7 +52,7 @@ class SortVisualizer extends Component {
     this.resetArray()
     const { array, timeouts } = this.state
     const newArray = array.map(data => data)
-    const newTimeouts = QuickSort(newArray, 0, newArray.length - 1, timeouts, (arr) => this.setState({ array: arr }, () => {
+    const newTimeouts = QuickSort(newArray, 0, newArray.length - 1, timeouts, (arr: number[]) => this.setState({ array: arr }, () => {
       console.log(this.state.array)
     }))
     this.setState({ timeouts: newTimeouts })
@@ -64,7 +69,7 @@ class SortVisualizer extends Component {
     this.resetArray()
     const { array, timeouts } = this.state
     const newArray = array.map(data => data)
-    const newTimeouts = MergeSort(newArray, 0, newArray.length - 1, timeouts, (arr) => this.setState({ array: arr }, () => {
+    const newTimeouts = MergeSort(newArray, 0, newArray.length - 1, timeouts, (arr: number[]) => this.setState({ array: arr }, () => {
       console.log(this.state.array)
     }))
     console.log('timeouts', timeouts)
